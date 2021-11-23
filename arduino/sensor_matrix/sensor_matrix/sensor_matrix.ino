@@ -2,12 +2,12 @@
  * 
  * 
  */
-int nb_row = 4;
-int nb_col = 6;
+const int nb_row = 4;
+const int nb_col = 6;
 
-int rowPin[] = {A0,A1,A2,A3};
-int colPin[] = {2,3,4,5,6,7};
-int sensorValues[] = {0,0,0,0};
+const int rowPin[] = {A0,A1,A2,A3};
+const int colPin[] = {2,3,4,5,6,7};
+int sensorValues[nb_row*nb_col];
 
 void setup() {
   // put your setup code here, to run once:
@@ -18,18 +18,34 @@ void setup() {
     pinMode(colPin[i], OUTPUT);
     }
 
+  Serial.begin(9600);
+
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  // for each row
   for (int i_col=0;i_col<nb_col;i_col++){
+    
+    // setting the i_col pin HIGH and all other columns to LOW
     digitalWrite(colPin[i_col], HIGH);
     for (int j_col=0;j_col<nb_col;j_col++){
       if (i_col != j_col){
         digitalWrite(colPin[j_col], LOW);
         }
       }
-    delay(100);
+
+    //measuring all rows
+    for (int i_row=0;i_row<nb_row;i_row++){
+      sensorValues[i_col*nb_row+i_row] = analogRead(rowPin[i_row]);
+      }
     }
+  
+  for (int i_val=0;i_val<(nb_row*nb_col);i_val++){
+    Serial.print(sensorValues[i_val]);
+    Serial.print(" ,");
+    }
+  Serial.println();
+  delay(1000);
+  
 
 }
