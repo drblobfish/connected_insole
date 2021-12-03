@@ -10,12 +10,46 @@ BLECharacteristic uv_index_characteristic = BLECharacteristic(UUID16_CHR_UV_INDE
 
 
 // sensor matrix setup
+
+//defining pin to change easily between microcontroller
+const int a=A0;
+const int b=A1;
+const int c=A2;
+const int d=A3;
+const int d1=12;
+const int d2=11;
+const int d3=10;
+const int d4=9;
+const int d5=6;
+const int d6=5;
+
+//---------------------
 const int nb_row = 4;
 const int nb_col = 5;//6;
 
 const int rowPin[] = {A0,A1,A2,A3};
 const int colPin[] = {5,6,9,10,11,12};
-int sensorValues[nb_row*nb_col];
+
+const int nb_sensor = 16;
+int sensorValues[nb_sensor];
+
+const int sensors[16][2] = {
+  {d3,c},
+  {d3,b},
+  {d4,c},
+  {d4,b},
+  {d2,d},
+  {d2,c},
+  {d2,b},
+  {d5,d},
+  {d1,d},
+  {d1,c},
+  {d1,b},
+  {d1,a},
+  {d6,d},
+  {d6,c},
+  {d6,b},
+  {d6,a}};
 
 void setup() {
   Serial.begin(115200);
@@ -24,9 +58,6 @@ void setup() {
 
   
   // sensor matrix pin setup
-  for (int i=0;i<nb_row;i++){
-    pinMode(rowPin[i], INPUT);
-    }
   for (int i=0;i<nb_col;i++){
     pinMode(colPin[i], OUTPUT);
     }
@@ -41,20 +72,16 @@ void setup() {
 
 void loop() {
 
-  for (int i_col=0;i_col<nb_col;i_col++){
-    
-    // setting the i_col pin HIGH and all other columns to LOW
-    digitalWrite(colPin[i_col], HIGH);
+  for (int i_sens=0;i_sens<nb_sensor;i_sens++){
+    // setting the sensor pin HIGH
+    digitalWrite(sensors[i_sens][0], HIGH);
+    // and all other columns to LOW
     for (int j_col=0;j_col<nb_col;j_col++){
-      if (i_col != j_col){
+      if (colPin[j_col] != sensors[i_sens][0]){
         digitalWrite(colPin[j_col], LOW);
         }
       }
-
-    //measuring all rows
-    for (int i_row=0;i_row<nb_row;i_row++){
-      sensorValues[i_col*nb_row+i_row] = analogRead(rowPin[i_row]);
-      }
+    sensorValues[i_sens] = analogRead(sensors[i_sens][1]);
     }
 
   Serial.print("UV Index: ");
@@ -87,7 +114,7 @@ void setupESService(void) {
   environmental_sensing_service.begin();
   uv_index_characteristic.setProperties(CHR_PROPS_INDICATE);
   uv_index_characteristic.setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS);
-  uv_index_characteristic.setFixedLen(20);//number of value to send
+  uv_index_characteristic.setFixedLen(16);//number of value to send
   uv_index_characteristic.begin();
   uv_index_characteristic.write(&uvindexvalue, sizeof(uvindexvalue));
 }
