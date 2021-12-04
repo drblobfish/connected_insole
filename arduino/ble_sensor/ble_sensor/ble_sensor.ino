@@ -16,6 +16,7 @@ const int a=A0;
 const int b=A1;
 const int c=A2;
 const int d=A3;
+
 const int d1=12;
 const int d2=11;
 const int d3=10;
@@ -31,7 +32,7 @@ const int rowPin[] = {A0,A1,A2,A3};
 const int colPin[] = {5,6,9,10,11,12};
 
 const int nb_sensor = 16;
-int sensorValues[nb_sensor];
+uint8_t sensorValues[nb_sensor];
 
 const int sensors[16][2] = {
   {d3,c},
@@ -82,18 +83,11 @@ void loop() {
         }
       }
     sensorValues[i_sens] = analogRead(sensors[i_sens][1]);
+    Serial.print(sensorValues[i_sens]);
+    Serial.print(", ");
     }
-
-  Serial.print("UV Index: ");
-  Serial.print(uvindexvalue[0]);
-
-  if (uv_index_characteristic.indicate(&sensorValues, sizeof(sensorValues))) {
-    Serial.print("Updated UV Index: ");
-  Serial.print(uvindexvalue[0]);
-  Serial.println(uvindexvalue[1]);
-  } else {
-    Serial.println("UV Index Indicate not set");
-  }
+  uv_index_characteristic.indicate(&sensorValues, sizeof(sensorValues));
+  Serial.println();
 
   delay(100);
 }
