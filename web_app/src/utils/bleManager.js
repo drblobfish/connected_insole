@@ -1,3 +1,22 @@
+/*
+This code is a quick refactoring of the code made by
+Sayanee Basu for the website hutscape.github.io and
+available under the MIT licence
+
+I just wrapped it in a class for a more object oriented
+use and added support for transfer of full data arays
+
+Original code can be found here
+https://github.com/hutscape/hutscape.github.io/blob/master/_tutorials/web-ble-gatt/web-ble-gatt.html
+
+
+Copyright (c) 2021 Sayanee Basu.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+
 export default class bleManager {
   constructor({
     bleService = "environmental_sensing",
@@ -15,13 +34,14 @@ export default class bleManager {
     this.OnChangedValues = OnChangedValues;
   }
 
-  setChangedValues(OnChangedValues) {
+  setOnChangedValues(OnChangedValues) {
     this.OnChangedValues = OnChangedValues;
   }
 
   isWebBluetoothEnabled() {
     if (!navigator.bluetooth) {
       console.log("Web Bluetooth API is not available in this browser!");
+      alert("Web Bluetooth API is not available in this browser!");
       return false;
     }
 

@@ -1,18 +1,33 @@
 import "./App.css";
 import { useState } from "react";
 
+//small module to handle web bluetooth
 import bleManager from "./utils/bleManager";
 
+// insole visualization component
 import Insole from "./components/insole_graph";
 
+// utils to test the insole visualization
 import { random_values, gradient } from "./utils/insole_graph_utils";
 
 var ble = new bleManager({});
+/* create a bleManager object to handle web bluetooth
+pass the following parameters :
+ - bleService : name of the service
+ - deviceName : name of the device
+ - bleCharacteristic : name of the characteristic
+ - array_length : length of the array of data transmitted
+*/
 
 function App() {
-  const [SensorValues, setSensorValues] = useState(gradient()); //[0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+  // create a react hook to rerender the elements when
+  const [SensorValues, setSensorValues] = useState([
+    0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  ]);
 
-  ble.setChangedValues((value) =>
+  // set the function that ble manager has to call each time a new
+  // value is transmitted throug bluetooth
+  ble.setOnChangedValues((value) =>
     setSensorValues(value.map((val) => val / 100))
   );
 
