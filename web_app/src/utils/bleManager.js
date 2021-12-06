@@ -15,6 +15,10 @@ export default class bleManager {
     this.OnChangedValues = OnChangedValues;
   }
 
+  setChangedValues(OnChangedValues) {
+    this.OnChangedValues = OnChangedValues;
+  }
+
   isWebBluetoothEnabled() {
     if (!navigator.bluetooth) {
       console.log("Web Bluetooth API is not available in this browser!");
@@ -91,7 +95,9 @@ export default class bleManager {
       value.push(event.target.value.getUint8(i));
     }
     console.log(value);
-    //this.OnChangedValues(value);
+    if (this.OnChangedValues) {
+      this.OnChangedValues(value);
+    }
   }
 
   start() {
@@ -106,9 +112,8 @@ export default class bleManager {
         .catch((error) => {
           console.log("[ERROR] Start: " + error);
         });
-    }
-    else {
-      alert('No device connected')
+    } else {
+      alert("No device connected");
     }
   }
 
@@ -124,9 +129,8 @@ export default class bleManager {
         .catch((error) => {
           console.log("[ERROR] Stop: " + error);
         });
-    }
-    else {
-      alert('No device connected')
+    } else {
+      alert("No device connected");
     }
   }
 }

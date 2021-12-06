@@ -1,4 +1,3 @@
-import logo from "./assets/logo.svg";
 import "./App.css";
 import { useState } from "react";
 
@@ -6,19 +5,21 @@ import bleManager from "./utils/bleManager";
 
 import Insole from "./components/insole_graph";
 
-import { random_values,gradient } from "./utils/insole_graph_utils";
+import { random_values, gradient } from "./utils/insole_graph_utils";
+
+var ble = new bleManager({});
 
 function App() {
+  const [SensorValues, setSensorValues] = useState(gradient()); //[0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 
-  const [SensorValues, setSensorValues] = useState(gradient());//[0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-  var ble = new bleManager({OnChangedValues:(value)=>setSensorValues(value)});
-
+  ble.setChangedValues((value) =>
+    setSensorValues(value.map((val) => val / 100))
+  );
 
   return (
     <div className="App">
       <header className="App-header">
         <p>REACT WEB BLE</p>
-        <img src={logo} className="App-logo" alt="logo" />
       </header>
 
       <p>Test 3</p>
@@ -58,7 +59,9 @@ function App() {
       </div>
       <button
         id="stop"
-        onClick={() => {setSensorValues(random_values())}}
+        onClick={() => {
+          setSensorValues(random_values());
+        }}
       >
         Random_Values
       </button>
